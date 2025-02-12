@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import React, { useState } from "react";
 
-export default function FreeKickDemo({ title, equationBase, description, ballPath }) {
+export default function FreeKickDemo({ title, equationBase, description }) {
     const [k, setK] = useState(110); // Scroll bar controls 'k' in the equation
 
     return (
@@ -13,20 +13,20 @@ export default function FreeKickDemo({ title, equationBase, description, ballPat
             style={{
                 display: "flex",
                 flexDirection: "column",
-                width: "65vw", // Adjust width to fit next to Chatbox
-                height: "90vh", // Match Chatbox height
+                width: "70vw",
+                height: "75vh",
                 margin: "20px",
                 borderRadius: "10px",
-                background: "#013220", // Dark green field
+                background: "#ddd",
                 padding: "10px",
                 position: "relative",
             }}
         >
-            {/* Free Kick Field */}
+            {/* Free Kick Simulation */}
             <motion.div
                 style={{
                     flex: 2,
-                    background: "#013220", // Dark green for grass field
+                    background: "#444",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -34,6 +34,47 @@ export default function FreeKickDemo({ title, equationBase, description, ballPat
                     borderRadius: "10px",
                 }}
             >
+                {/* Ball Curve (Parabola) */}
+                <motion.svg
+                    width="100%"
+                    height="100%"
+                    viewBox="0 0 400 200"
+                    style={{ position: "absolute", top: 0, left: 0 }}
+                >
+                    {/* Opponent Defense Wall (Red Blocks) */}
+                    <rect x="140" y="100" width="20" height="50" fill="red" />
+                    <rect x="160" y="100" width="20" height="50" fill="red" />
+                    <rect x="180" y="100" width="20" height="50" fill="red" />
+
+                    {/* Goal Post (Right Side) */}
+                    <rect x="370" y="80" width="10" height="70" fill="white" />
+                    <rect x="360" y="80" width="10" height="10" fill="white" />
+
+                    {/* Ball Trajectory (Dynamic Parabola) */}
+                    <path
+                        d={`M50,150 Q200,${200 - k / 10} 350,150`}
+                        stroke="yellow"
+                        strokeWidth="4"
+                        fill="none"
+                    />
+
+                    {/* Ball Movement */}
+                    <motion.circle
+                        cx="50"
+                        cy="150"
+                        r="8"
+                        fill="yellow"
+                        animate={{
+                            cx: [50, 200, 350],
+                            cy: [150, 200 - k / 10, 150],
+                        }}
+                        transition={{
+                            repeat: Infinity,
+                            duration: 2,
+                            ease: "easeInOut",
+                        }}
+                    />
+                </motion.svg>
                 <h3 style={{ color: "white", position: "absolute" }}>{title} - Free Kick Simulation</h3>
             </motion.div>
 
@@ -41,6 +82,7 @@ export default function FreeKickDemo({ title, equationBase, description, ballPat
             <motion.div
                 style={{
                     flex: 1,
+                    marginTop: "10px",
                     background: "#222",
                     color: "white",
                     padding: "10px",
@@ -49,7 +91,7 @@ export default function FreeKickDemo({ title, equationBase, description, ballPat
             >
                 <h3>Formula & Variables</h3>
                 <p>{description}</p>
-                <p><strong>Equation:</strong> {equationBase.replace("{k}", k)}</p>
+                <p><strong>Equation:</strong> y = -{k}x(x - 6)</p>
             </motion.div>
 
             {/* Scroll Bar to Adjust K Value */}
